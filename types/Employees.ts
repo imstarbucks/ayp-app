@@ -6,7 +6,7 @@ export type Employees = {
 };
 
 export type TEmployeesResponse = {
-  data?: Employees;
-  loading: Boolean;
+  data?: any;
+  loading: boolean;
   error?: string;
 };
