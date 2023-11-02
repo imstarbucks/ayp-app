@@ -14,20 +14,11 @@ const Search = ({ defaultData, setCurrentData }) => {
 
     setCurrentData(defaultData);
   };
-  // const searchQuery = () => {
-  //   if (searchInput !== '') {
-  //     const filterData = defaultData.filter((d) => d.name.match(searchInput));
-  //     setCurrentData(filterData);
-  //     return;
-  //   }
-
-  //   setCurrentData(defaultData);
-  // };
 
   return (
     <form className="flex gap-5" action={searchQuery}>
       <input
-        className="rounded-lg p-3 bg-white text-background"
+        className="rounded-lg px-3 py-2 bg-white text-background"
         type="text"
         name="searchEmployeeName"
         id="searchEmployeeName"
@@ -35,7 +26,10 @@ const Search = ({ defaultData, setCurrentData }) => {
         value={searchInput}
         onChange={(e) => setSearchInput(e.currentTarget.value)}
       />
-      <button className="rounded-lg p-3 bg-white text-background" type="submit">
+      <button
+        className="rounded-lg px-3 py-2 bg-white text-background hover:bg-primary hover:text-background transition"
+        type="submit"
+      >
         Search
       </button>
     </form>

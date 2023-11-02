@@ -3,8 +3,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Employees } from '@/types/Employees';
 
-import { DataContext } from '@/app/context';
-
 import Spinner from './Spinner';
 import Search from './Search';
 import { useModal } from './Modal';
@@ -29,7 +27,6 @@ const Table = ({ defaultData, loading }: TableProps) => {
   );
 
   const { setModal, setModalData } = useModal();
-  const { data, setData } = useContext(DataContext);
 
   const UpdateButton = ({ data }: UpdateButtonProps) => {
     const handleOnClick = (data?: Employees) => {
@@ -49,19 +46,17 @@ const Table = ({ defaultData, loading }: TableProps) => {
 
   useEffect(() => {
     setDefaultData(defaultData);
-    // setCurrentData(_defaultData);
   }, [defaultData]);
 
   useEffect(() => {
-    // setDefaultData(defaultData);
     setCurrentData(_defaultData);
   }, [_defaultData]);
 
   return (
     _defaultData && (
-      <div className="w-3/4 lg:w-1/2">
+      <div className="w-[90%] md:w-3/4 lg:w-1/2 overflow-x-auto">
         <Search defaultData={_defaultData} setCurrentData={setCurrentData} />
-        <div className="border border-secondary relative mt-5">
+        <div className="relative mt-5">
           {loading ? <Spinner /> : <></>}
           <table className="table-auto justify-center bg-primary w-full">
             <thead>
@@ -97,8 +92,8 @@ const Table = ({ defaultData, loading }: TableProps) => {
               ))}
             </tbody>
           </table>
-          {currentData?.length <= 0 && (
-            <div className="text-center">No record found.</div>
+          {currentData && currentData.length <= 0 && (
+            <div className="text-center my-10">No record found.</div>
           )}
         </div>
       </div>
