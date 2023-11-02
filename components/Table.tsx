@@ -1,11 +1,14 @@
-import React, { useRef, useState, useContext } from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { Employees } from '@/types/Employees';
 
 import Spinner from './Spinner';
 import { useModal } from './Modal';
 
 type TableProps = {
-  data?: Employees[];
+  defaultData?: Employees[];
+  modalData?: Employees[];
   loading: boolean;
 };
 
@@ -13,13 +16,22 @@ type UpdateButtonProps = {
   data?: Employees;
 };
 
-const Table = ({ data, loading }: TableProps) => {
-  const UpdateButton = ({ data }: UpdateButtonProps) => {
-    const { setModal, setModalData } = useModal();
+const Table = ({ defaultData, loading }: TableProps) => {
+  const [_defaultData, setDefaultData] = useState<Employees[]>(
+    defaultData || []
+  );
 
+  const [currentData, setCurrentData] = useState<Employees[]>(
+    _defaultData || []
+  );
+
+  const { setModal, setModalData } = useModal();
+
+  const UpdateButton = ({ data }: UpdateButtonProps) => {
     const handleOnClick = (data?: Employees) => {
-      setModal(true);
+      console.log(data);
       setModalData(data);
+      setModal(true);
     };
     return (
       <button
@@ -32,11 +44,15 @@ const Table = ({ data, loading }: TableProps) => {
     );
   };
 
+  useEffect(() => {
+    setDefaultData(defaultData);
+    setCurrentData(_defaultData);
+  }, [defaultData]);
+
   return (
-    data && (
+    defaultData && (
       <div className="w-1/2 border border-secondary relative">
         {loading ? <Spinner /> : <></>}
-        {/* <Spinner /> */}
         <table className="table-auto justify-center bg-primary w-full">
           <thead>
             <tr className="text-left">
@@ -49,7 +65,7 @@ const Table = ({ data, loading }: TableProps) => {
           </thead>
 
           <tbody>
-            {data?.map((d) => (
+            {currentData?.map((d) => (
               <tr
                 key={`${d.id + d.name}`}
                 className="odd:bg-background odd:text-secondary bg-primary

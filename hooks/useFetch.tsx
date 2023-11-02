@@ -12,7 +12,7 @@ export const useFetch = (url: string): TEmployeesResponse => {
     try {
       const res = await fetch(url);
       const json = await res.json();
-      console.log(json);
+      console.log('Response: ', json);
       setData(json);
     } catch (error) {
       setError(error);
