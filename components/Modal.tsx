@@ -17,14 +17,23 @@ const ModalContext = createContext();
 
 type ModalProps = Employees;
 
+type InputFields = {
+  nameInput: string;
+  emailInput: string;
+};
+
 const Modal: React.FC<ModalProps> = ({
   name,
   id,
   email,
   isActive,
 }: ModalProps) => {
-  const [nameInput, setNameInput] = useState<string>(name);
-  const [emailInput, setEmailInput] = useState<string>(email);
+  const [inputFields, setInputFields] = useState<InputFields>({
+    nameInput: name,
+    emailInput: email,
+  });
+
+  const [isActiveToggle, setIsActiveToggle] = useState<boolean>(isActive);
 
   const { modal, setModal } = useModal();
   const { data, setData } = useContext(DataContext);
@@ -42,40 +51,29 @@ const Modal: React.FC<ModalProps> = ({
       id: id,
       name: formData.get('employeeName'),
       email: formData.get('employeeEmail'),
-      isActive: formData.get('employeeStatus'),
+      isActive: formData.get('employeeStatus') === 'on',
     };
-
-    // const newDefaultData = data?.map((d) => {
-    //   if (d.id === id) {
-    //     return employeeData;
-    //   } else {
-    //     return d;
-    //   }
-    // });
 
     const newDefaultData =
       data?.map((d) => (d.id === id ? employeeData : d)) || [];
 
     setModal(false);
-    console.log('new', newDefaultData);
     setData(newDefaultData);
-    console.log('new data', data);
   };
 
   useEffect(() => {
-    if (modal) {
-      modalRef.current?.showModal();
-    } else {
-      modalRef.current?.close();
-    }
+    modal ? modalRef.current?.showModal() : modalRef.current?.close();
 
     return;
   }, [modal]);
 
   useEffect(() => {
-    setNameInput(name);
-    setEmailInput(email);
-  }, [name, email]);
+    setInputFields({
+      nameInput: name,
+      emailInput: email,
+    });
+    setIsActiveToggle(isActive);
+  }, [name, email, isActive]);
 
   return (
     <dialog
@@ -92,8 +90,13 @@ const Modal: React.FC<ModalProps> = ({
               name="employeeName"
               className="px-3 py-1"
               type="text"
-              value={nameInput}
-              onChange={(e) => setNameInput(e.currentTarget.value)}
+              value={inputFields.nameInput}
+              onChange={(e) =>
+                setInputFields({
+                  ...inputFields,
+                  nameInput: e.currentTarget.value,
+                })
+              }
             />
           </div>
           <div className="flex items-center my-5 gap-5 text-xl">
@@ -103,13 +106,18 @@ const Modal: React.FC<ModalProps> = ({
               name="employeeEmail"
               className="px-3 py-1"
               type="email"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.currentTarget.value)}
+              value={inputFields.emailInput}
+              onChange={(e) =>
+                setInputFields({
+                  ...inputFields,
+                  emailInput: e.currentTarget.value,
+                })
+              }
             />
           </div>
           <div className="flex items-center my-5 gap-5 text-xl">
             <label>Status: </label>
-            <ToggleSwitch isActive={isActive} />
+            <ToggleSwitch isActive={isActiveToggle} />
           </div>
           <button
             ref={closeBtnRef}

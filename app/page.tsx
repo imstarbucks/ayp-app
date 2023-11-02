@@ -16,7 +16,7 @@ export default function Home() {
     if (res && res.data?.employees) {
       setData(res.data.employees);
     }
-  }, [res]);
+  }, [res.data]);
 
   return (
     <main className="bg-background text-primary h-screen flex justify-center items-center">

@@ -1,7 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const ToggleSwitch = ({ isActive }) => {
   const [active, setActive] = useState(isActive);
+
+  useEffect(() => {
+    setActive(isActive);
+  }, [isActive]);
+
   return (
     <label htmlFor="employeeStatus">
       <input
